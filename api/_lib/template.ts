@@ -7,13 +7,13 @@ const twemoji = require('twemoji');
 const twOptions = { folder: 'svg', ext: '.svg' };
 const emojify = (text: string) => twemoji.parse(text, twOptions);
 
-const rglr = readFileSync(`${__dirname}/../_fonts/Inter-Regular.woff2`).toString('base64');
-const bold = readFileSync(`${__dirname}/../_fonts/Inter-Bold.woff2`).toString('base64');
-const mono = readFileSync(`${__dirname}/../_fonts/Vera-Mono.woff2`).toString('base64');
+const rglr = readFileSync(`${__dirname}/../_fonts/overpass-regular.woff2`).toString('base64');
+const bold = readFileSync(`${__dirname}/../_fonts/overpass-bold.woff2`).toString('base64');
+const mono = readFileSync(`${__dirname}/../_fonts/overpass-mono-regular.woff2`).toString('base64');
 
 function getCss(theme: string, fontSize: string) {
-    let background = 'white';
-    let foreground = 'black';
+    let background = '#fffaf0';
+    let foreground = '#4a5568';
     let radial = 'lightgray';
 
     if (theme === 'dark') {
@@ -23,21 +23,21 @@ function getCss(theme: string, fontSize: string) {
     }
     return `
     @font-face {
-        font-family: 'Inter';
+        font-family: 'Overpass';
         font-style:  normal;
         font-weight: normal;
         src: url(data:font/woff2;charset=utf-8;base64,${rglr}) format('woff2');
     }
 
     @font-face {
-        font-family: 'Inter';
+        font-family: 'Overpass';
         font-style:  normal;
         font-weight: bold;
         src: url(data:font/woff2;charset=utf-8;base64,${bold}) format('woff2');
     }
 
     @font-face {
-        font-family: 'Vera';
+        font-family: 'Overpass Mono';
         font-style: normal;
         font-weight: normal;
         src: url(data:font/woff2;charset=utf-8;base64,${mono})  format("woff2");
@@ -45,18 +45,19 @@ function getCss(theme: string, fontSize: string) {
 
     body {
         background: ${background};
-        background-image: radial-gradient(circle at 25px 25px, ${radial} 2%, transparent 0%), radial-gradient(circle at 75px 75px, ${radial} 2%, transparent 0%);
+        // background-image: radial-gradient(circle at 25px 25px, ${radial} 2%, transparent 0%), radial-gradient(circle at 75px 75px, ${radial} 2%, transparent 0%);
         background-size: 100px 100px;
         height: 100vh;
         display: flex;
         text-align: center;
         align-items: center;
         justify-content: center;
+        border-bottom: 20px solid #c05621;
     }
 
     code {
         color: #D400FF;
-        font-family: 'Vera';
+        font-family: 'Overpass Mono';
         white-space: pre-wrap;
         letter-spacing: -5px;
     }
@@ -66,7 +67,7 @@ function getCss(theme: string, fontSize: string) {
     }
 
     .logo-wrapper {
-        display: flex;
+        display: none;
         align-items: center;
         align-content: center;
         justify-content: center;
@@ -95,8 +96,18 @@ function getCss(theme: string, fontSize: string) {
     }
     
     .heading {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Overpass', sans-serif;
         font-size: ${sanitizeHtml(fontSize)};
+        font-style: normal;
+        color: ${foreground};
+        line-height: 1.8;
+    }
+    
+    .footer {
+        font-family: 'Overpass Mono';
+        margin-top: 50px;
+        font-size: 50px;
+        width: 100%;
         font-style: normal;
         color: ${foreground};
         line-height: 1.8;
@@ -113,8 +124,8 @@ export function getHtml(parsedReq: ParsedRequest) {
     <style>
         ${getCss(theme, fontSize)}
     </style>
-    <body>
-        <div>
+    <body class="border-b">
+        <div >
             <div class="spacer">
             <div class="logo-wrapper">
                 ${images.map((img, i) =>
@@ -124,7 +135,14 @@ export function getHtml(parsedReq: ParsedRequest) {
             <div class="spacer">
             <div class="heading">${emojify(
                 md ? marked(text) : sanitizeHtml(text)
-            )}
+                )}
+                </div>
+            <div class="spacer">
+            <div class="spacer">
+            <div class="footer"> 
+                <p>
+                jakub chalupa · chalupa.me
+                </p>
             </div>
         </div>
     </body>
